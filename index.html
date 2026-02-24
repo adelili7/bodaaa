@@ -5,56 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Invitación</title>
 
-  <!--
-    ✅ ESTE ES EL index.html COMPLETO Y CORREGIDO
-    ✅ Rutas corregidas para tu caso (NO moviste nada):
-       mp4/mp3 están en la RAÍZ del repo → usamos ./archivo.mp4 y ./archivo.mp3
-    ✅ Flipbook bidireccional: anterior/siguiente (EXCEPTO portada: solo abre con el anillo)
-    ✅ Página girando tipo libro + destello en transiciones
-    ✅ Partículas flotantes (solo portada) + cursor mágico visible en TODAS las páginas
-    ✅ Partículas mágicas que siguen el cursor incluso dentro del flipbook
-    ✅ Control de reproducción por sección:
-       - Solo el video de la página actual puede reproducirse (se pausan los demás)
-       - Autoplay “seguro”: intenta play; si el navegador bloquea, deja el video listo para que le des play
-       - Al entrar:
-         * P1 (portada): intenta iniciar marcha_nupcial.mp3 (si se bloquea, inicia con el primer toque)
-         * Click anillo: inicia/reanuda marcha_nupcial.mp3 y abre P2
-         * P3 (promesa): intenta autoplay promesa.mp4
-         * P5 (esposa): cambia a unmundodiferente.mp3 e intenta autoplay esposa.mp4
-
-    📁 Archivos en la RAÍZ del repo (tal cual):
-      marcha_nupcial.mp3
-      unmundodiferente.mp3
-      apertura.mp4
-      promesa.mp4
-      estheryerick.mp4
-      esposa.mp4
-      padres.mp4
-      boda.mp4
-      ceremonia.mp4
-  -->
-
   <style>
     :root{
-      --bg1:#05060a;
-      --bg2:#0a0d18;
+      --bg1:#05060a; --bg2:#0a0d18;
+      --text:#f4f7ff; --muted:#b7c0d6;
 
-      --text:#f4f7ff;
-      --muted:#b7c0d6;
+      --roseA:#231018; --roseB:#472331; --roseGlow: rgba(231,168,184,.22);
 
-      --roseA:#231018;
-      --roseB:#472331;
-      --roseGlow: rgba(231,168,184,.22);
+      --silver1:#f7fbff; --silver2:#cfd6e2; --silver3:#7e8796; --silver4:#eef2f7;
 
-      --silver1:#f7fbff;
-      --silver2:#cfd6e2;
-      --silver3:#7e8796;
-      --silver4:#eef2f7;
-
-      --blue1:#bfe6ff;
-      --blue2:#4bb7ff;
-      --blue3:#1677ff;
-      --blue4:#0a2a8a;
+      --blue1:#bfe6ff; --blue2:#4bb7ff; --blue3:#1677ff; --blue4:#0a2a8a;
 
       --pBlue:  rgba(75,183,255,.85);
       --pRose:  rgba(231,168,184,.80);
@@ -64,7 +24,6 @@
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
-
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -77,316 +36,180 @@
       cursor:none;
     }
 
-    /* Fondo partículas SOLO portada */
-    #bgParticles{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      opacity: 1;
-      transition: opacity 450ms ease;
-    }
+    #bgParticles{ position:fixed; inset:0; z-index:0; pointer-events:none; opacity:1; transition:opacity 450ms ease; }
+    #fxCanvas{ position:fixed; inset:0; z-index:90; pointer-events:none; }
 
-    /* FX del cursor SIEMPRE */
-    #fxCanvas{
-      position:fixed;
-      inset:0;
-      z-index:90;
-      pointer-events:none;
-    }
-
-    /* Destello transición */
     #flash{
-      position:fixed;
-      inset:0;
-      z-index:80;
-      pointer-events:none;
+      position:fixed; inset:0; z-index:80; pointer-events:none;
       background:
         radial-gradient(320px 220px at var(--x,50%) var(--y,50%), rgba(255,255,255,.35), transparent 60%),
         radial-gradient(520px 320px at var(--x,50%) var(--y,50%), rgba(75,183,255,.16), transparent 65%),
         radial-gradient(560px 380px at var(--x,50%) var(--y,50%), rgba(231,168,184,.12), transparent 70%);
-      opacity:0;
-      transition: opacity 220ms ease;
+      opacity:0; transition: opacity 220ms ease;
     }
     #flash.on{ opacity:1; }
 
-    /* Cursor mágico */
-    .cursor{
-      position:fixed;
-      z-index:100;
-      pointer-events:none;
-      transform: translate(-50%, -50%);
-      will-change: transform;
-    }
+    .cursor{ position:fixed; z-index:100; pointer-events:none; transform: translate(-50%,-50%); }
     .cursor .dot{
-      width: 10px; height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.88);
-      box-shadow:
-        0 0 18px rgba(75,183,255,.45),
-        0 0 28px rgba(231,168,184,.22);
+      width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.88);
+      box-shadow: 0 0 18px rgba(75,183,255,.45), 0 0 28px rgba(231,168,184,.22);
     }
     .cursor .ring{
-      position:absolute;
-      left:50%; top:50%;
-      transform: translate(-50%,-50%);
-      width: 30px; height: 30px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.26);
+      position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
+      width:30px; height:30px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.26);
       box-shadow: 0 0 22px rgba(75,183,255,.20);
       opacity:.78;
     }
 
-    .stage{
-      position:relative;
-      z-index:2;
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 22px;
-    }
+    .stage{ position:relative; z-index:2; height:100%; display:flex; align-items:center; justify-content:center; padding:22px; }
 
-    /* Flipbook container */
     .bookWrap{
-      width: min(1040px, 96vw);
-      height: min(700px, 84vh);
-      perspective: 1900px;
-      position: relative;
+      width:min(1040px,96vw);
+      height:min(700px,84vh);
+      perspective:1900px;
+      position:relative;
       filter: drop-shadow(0 28px 70px rgba(0,0,0,.55));
     }
-    .book{
-      width:100%;
-      height:100%;
-      position:relative;
-      transform-style: preserve-3d;
-    }
+    .book{ width:100%; height:100%; position:relative; transform-style:preserve-3d; }
 
-    /* Páginas */
     .page{
-      position:absolute;
-      inset:0;
-      transform-style: preserve-3d;
-      transform-origin: left center;
+      position:absolute; inset:0;
+      transform-style:preserve-3d;
+      transform-origin:left center;
       transition: transform 920ms cubic-bezier(.18,.9,.17,1);
-      border-radius: 24px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.10);
+      border-radius:24px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       box-shadow: 0 22px 60px rgba(0,0,0,.45);
     }
     .page::before{
-      content:"";
-      position:absolute;
-      top:0; bottom:0;
-      left:0;
-      width: 34px;
+      content:""; position:absolute; top:0; bottom:0; left:0; width:34px;
       background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,0));
-      opacity: .55;
-      pointer-events:none;
-      transform: translateZ(1px);
+      opacity:.55; pointer-events:none; transform: translateZ(1px);
     }
     .page.flipped{ transform: rotateY(-180deg); }
 
     .face{
-      position:absolute;
-      inset:0;
-      backface-visibility:hidden;
-      display:flex;
-      flex-direction:column;
-      padding: 26px 24px;
-      gap: 12px;
+      position:absolute; inset:0; backface-visibility:hidden;
+      display:flex; flex-direction:column;
+      padding:26px 24px; gap:12px;
     }
     .front{ transform: rotateY(0deg) translateZ(1px); }
     .back{ transform: rotateY(180deg) translateZ(1px); }
 
-    /* Portada */
     .coverFace{
       background:
         radial-gradient(700px 420px at 50% 25%, var(--roseGlow), transparent 60%),
         linear-gradient(180deg, var(--roseA), var(--roseB));
     }
 
-    .title{
-      margin:0;
-      font-size: 34px;
-      letter-spacing:.2px;
-      text-align:center;
-    }
-    .subtitle{
-      margin:0;
-      text-align:center;
-      color: var(--muted);
-      font-size: 14px;
-      letter-spacing:.03em;
-    }
+    .title{ margin:0; font-size:34px; text-align:center; }
+    .subtitle{ margin:0; text-align:center; color:var(--muted); font-size:14px; }
+    .yes{ margin:6px 0 0; font-size:46px; text-align:center; }
+    .instruction{ margin:0; text-align:center; color:rgba(255,255,255,.82); font-size:14px; text-transform:lowercase; letter-spacing:.05em; }
 
-    .yes{
-      margin: 6px 0 0;
-      font-size: 46px;
-      text-align:center;
-      letter-spacing:.2px;
-    }
-    .instruction{
-      margin: 0;
-      text-align:center;
-      color: rgba(255,255,255,.82);
-      font-size: 14px;
-      letter-spacing:.05em;
-      text-transform: lowercase;
-    }
-
-    .panel{
-      flex:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-    }
-
+    .panel{ flex:1; display:flex; align-items:center; justify-content:center; }
     .contentCard{
-      width: min(900px, 100%);
+      width:min(900px,100%);
       background: rgba(0,0,0,.14);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 20px;
-      padding: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:20px;
+      padding:18px;
     }
 
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      margin-top: 12px;
-    }
+    .nav{ display:flex; justify-content:space-between; gap:10px; margin-top:12px; }
     .btn{
       appearance:none;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 12px 14px;
-      border-radius: 14px;
+      color:var(--text);
+      padding:12px 14px;
+      border-radius:14px;
       cursor:pointer;
-      font-size: 13px;
-      letter-spacing:.02em;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
+      font-size:13px;
+      display:inline-flex; align-items:center; justify-content:center;
       user-select:none;
     }
-    .btn.primary{
-      border-color: rgba(75,183,255,.35);
-      background: rgba(75,183,255,.16);
-    }
-    .btn:active{ transform: translateY(1px); }
+    .btn.primary{ border-color: rgba(75,183,255,.35); background: rgba(75,183,255,.16); }
     .btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
     .video{
-      width: 100%;
-      border-radius: 18px;
+      width:100%;
+      border-radius:18px;
       border:1px solid rgba(255,255,255,.12);
       background:#000;
     }
 
-    /* Botón anillo */
     .ringBtn{
-      appearance:none;
-      border:0;
-      background: transparent;
+      appearance:none; border:0; background:transparent;
       cursor:pointer;
-      padding: 10px 14px 8px;
-      border-radius: 22px;
-      display:inline-flex;
-      flex-direction:column;
-      align-items:center;
-      gap: 8px;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
+      padding:10px 14px 8px;
+      border-radius:22px;
+      display:inline-flex; flex-direction:column; align-items:center; gap:8px;
+      user-select:none; -webkit-tap-highlight-color: transparent;
     }
-    .ringBtn:focus-visible{
-      outline: 3px solid rgba(75,183,255,.55);
-      outline-offset: 8px;
-    }
+    .ringBtn:focus-visible{ outline:3px solid rgba(75,183,255,.55); outline-offset:8px; }
     .ringSvg{
-      width: 270px;
-      height: 270px;
+      width:270px; height:270px;
       filter: drop-shadow(0 18px 34px rgba(0,0,0,.45));
-      transform: translateZ(0);
       transition: transform .25s ease, filter .25s ease;
     }
-    .ringBtn:hover .ringSvg{
-      transform: translateY(-2px) scale(1.02);
-      filter: drop-shadow(0 24px 44px rgba(0,0,0,.60));
-    }
+    .ringBtn:hover .ringSvg{ transform: translateY(-2px) scale(1.02); filter: drop-shadow(0 24px 44px rgba(0,0,0,.60)); }
     .ringBtn:active .ringSvg{ transform: translateY(1px) scale(.99); }
 
-    /* Animaciones princesa */
-    .sparkle { animation: twinkle 1.8s ease-in-out infinite; transform-origin: center; }
-    .sparkle.s2{ animation-delay: .25s; opacity:.75; }
-    .sparkle.s3{ animation-delay: .55s; opacity:.6; }
-    @keyframes twinkle{
-      0%,100%{ transform: scale(.92); opacity:.35; }
-      50%{ transform: scale(1.06); opacity:1; }
-    }
+    .sparkle { animation: twinkle 1.8s ease-in-out infinite; transform-origin:center; }
+    .sparkle.s2{ animation-delay:.25s; opacity:.75; }
+    .sparkle.s3{ animation-delay:.55s; opacity:.6; }
+    @keyframes twinkle{ 0%,100%{transform:scale(.92);opacity:.35} 50%{transform:scale(1.06);opacity:1} }
+
     .gemGlow { animation: gemPulse 2.2s ease-in-out infinite; }
-    @keyframes gemPulse{
-      0%,100%{ filter: drop-shadow(0 0 0 rgba(75,183,255,0)); }
-      50%{ filter: drop-shadow(0 0 18px rgba(75,183,255,.55)); }
-    }
+    @keyframes gemPulse{ 0%,100%{filter:drop-shadow(0 0 0 rgba(75,183,255,0))} 50%{filter:drop-shadow(0 0 18px rgba(75,183,255,.55))} }
+
     .shimmer { animation: shimmerSweep 1.9s ease-in-out infinite; }
     @keyframes shimmerSweep{
-      0%{ opacity:0; transform: translateX(-34px) rotate(-12deg); }
-      22%{ opacity:.9; }
-      55%{ opacity:.15; }
-      100%{ opacity:0; transform: translateX(74px) rotate(-12deg); }
-    }
-    .float { animation: floaty 3.4s ease-in-out infinite; }
-    @keyframes floaty{
-      0%,100%{ transform: translateY(0px); }
-      50%{ transform: translateY(-6px); }
+      0%{opacity:0;transform:translateX(-34px) rotate(-12deg)}
+      22%{opacity:.9}
+      55%{opacity:.15}
+      100%{opacity:0;transform:translateX(74px) rotate(-12deg)}
     }
 
-    /* Accesibilidad / reduced motion */
+    .float { animation: floaty 3.4s ease-in-out infinite; }
+    @keyframes floaty{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
     @media (prefers-reduced-motion: reduce){
       .page{ transition:none; }
-      .sparkle, .gemGlow, .shimmer, .float{ animation:none !important; }
+      .sparkle,.gemGlow,.shimmer,.float{ animation:none !important; }
       body{ cursor:auto; }
-      .cursor, #fxCanvas{ display:none; }
+      .cursor,#fxCanvas{ display:none; }
     }
-
-    @media (max-width: 520px){
-      .yes{ font-size: 36px; }
-      .ringSvg{ width: 240px; height: 240px; }
-      .title{ font-size: 28px; }
+    @media (max-width:520px){
+      .yes{ font-size:36px; }
+      .ringSvg{ width:240px; height:240px; }
+      .title{ font-size:28px; }
     }
   </style>
 </head>
 
 <body>
-  <!-- partículas fondo portada -->
   <canvas id="bgParticles"></canvas>
-
-  <!-- destello -->
   <div id="flash" aria-hidden="true"></div>
-
-  <!-- fx cursor -->
   <canvas id="fxCanvas"></canvas>
 
-  <!-- cursor mágico -->
   <div class="cursor" id="cursor" aria-hidden="true">
     <div class="ring"></div>
     <div class="dot"></div>
   </div>
 
-  <!-- ✅ audios en RAÍZ -->
+  <!-- audios (RAÍZ) -->
   <audio id="marcha_nupcial" src="./marcha_nupcial.mp3" preload="auto"></audio>
   <audio id="unmundodiferente" src="./unmundodiferente.mp3" preload="auto"></audio>
 
   <div class="stage">
-    <div class="bookWrap" aria-label="Invitación tipo flipbook">
+    <div class="bookWrap">
       <div class="book" id="book">
 
-        <!-- PÁGINA 1 (PORTADA) -->
+        <!-- P1 PORTADA -->
         <div class="page" data-index="0" style="z-index:8;">
           <div class="face front coverFace">
             <h1 class="yes">¡Sí, acepto!</h1>
@@ -394,7 +217,7 @@
 
             <div class="panel">
               <button id="btnRing" class="ringBtn" type="button" aria-label="Abrir invitación">
-                <svg class="ringSvg float" viewBox="0 0 260 260" role="img" aria-hidden="true">
+                <svg class="ringSvg float" viewBox="0 0 260 260" aria-hidden="true">
                   <defs>
                     <linearGradient id="silverGrad" x1="0" y1="0" x2="1" y2="1">
                       <stop offset="0%"  stop-color="var(--silver1)"/>
@@ -403,31 +226,24 @@
                       <stop offset="72%" stop-color="var(--silver4)"/>
                       <stop offset="100%" stop-color="var(--silver2)"/>
                     </linearGradient>
-
                     <linearGradient id="silverSpec" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
                       <stop offset="45%" stop-color="rgba(255,255,255,.95)"/>
                       <stop offset="55%" stop-color="rgba(255,255,255,.15)"/>
                       <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
                     </linearGradient>
-
                     <radialGradient id="blueGem" cx="35%" cy="30%" r="75%">
                       <stop offset="0%"  stop-color="var(--blue1)"/>
                       <stop offset="35%" stop-color="var(--blue2)"/>
                       <stop offset="70%" stop-color="var(--blue3)"/>
                       <stop offset="100%" stop-color="var(--blue4)"/>
                     </radialGradient>
-
                     <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
                       <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,.45)"/>
                     </filter>
-
                     <filter id="sparkleGlow" x="-80%" y="-80%" width="260%" height="260%">
                       <feGaussianBlur stdDeviation="1.8" result="bb"/>
-                      <feMerge>
-                        <feMergeNode in="bb"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
+                      <feMerge><feMergeNode in="bb"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
                   </defs>
 
@@ -437,65 +253,27 @@
                     <path d="M130 42 L168 78 L130 114 L92 78 Z" fill="rgba(245,250,255,.92)"/>
                     <path d="M130 50 L160 80 L130 110 L100 80 Z" fill="url(#blueGem)"/>
                     <path d="M130 50 L140 80 L130 110 L120 80 Z" fill="rgba(255,255,255,.22)"/>
-                    <path d="M100 80 L120 80 L130 110 L112 110 Z" fill="rgba(255,255,255,.12)"/>
-                    <path d="M160 80 L140 80 L130 110 L148 110 Z" fill="rgba(0,0,0,.10)"/>
-                    <path d="M118 66 C124 60,132 60,138 66 C132 70,124 70,118 66 Z"
-                          fill="rgba(255,255,255,.75)"/>
+                    <path d="M118 66 C124 60,132 60,138 66 C132 70,124 70,118 66 Z" fill="rgba(255,255,255,.75)"/>
                   </g>
 
                   <g>
-                    <path
-                      d="M130 100
-                         C 78 100, 52 140, 52 174
-                         C 52 214, 85 236, 130 236
-                         C 175 236, 208 214, 208 174
-                         C 208 140, 182 100, 130 100
-                         Z"
-                      fill="none"
-                      stroke="url(#silverGrad)"
-                      stroke-width="24"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M130 112
-                         C 90 112, 70 144, 70 172
-                         C 70 206, 96 222, 130 222
-                         C 164 222, 190 206, 190 172
-                         C 190 144, 170 112, 130 112
-                         Z"
-                      fill="none"
-                      stroke="rgba(0,0,0,.12)"
-                      stroke-width="8"
-                      stroke-linecap="round"
-                    />
+                    <path d="M130 100 C78 100,52 140,52 174 C52 214,85 236,130 236 C175 236,208 214,208 174 C208 140,182 100,130 100 Z"
+                      fill="none" stroke="url(#silverGrad)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
                     <g class="shimmer">
                       <path d="M80 168 C 80 138, 104 122, 126 118"
-                            fill="none"
-                            stroke="url(#silverSpec)"
-                            stroke-width="12"
-                            stroke-linecap="round"
-                            opacity=".9"/>
+                        fill="none" stroke="url(#silverSpec)" stroke-width="12" stroke-linecap="round" opacity=".9"/>
                     </g>
-                    <path d="M148 232 C 186 224, 199 200, 201 176"
-                          fill="none"
-                          stroke="rgba(255,255,255,.22)"
-                          stroke-width="9"
-                          stroke-linecap="round"/>
                   </g>
 
                   <g filter="url(#sparkleGlow)">
                     <g class="sparkle" transform="translate(32,54)">
-                      <path d="M18 0 L22 14 L36 18 L22 22 L18 36 L14 22 L0 18 L14 14 Z"
-                            fill="rgba(255,255,255,.92)"/>
+                      <path d="M18 0 L22 14 L36 18 L22 22 L18 36 L14 22 L0 18 L14 14 Z" fill="rgba(255,255,255,.92)"/>
                     </g>
                     <g class="sparkle s2" transform="translate(190,70) scale(.75)">
-                      <path d="M18 0 L22 14 L36 18 L22 22 L18 36 L14 22 L0 18 L14 14 Z"
-                            fill="rgba(200,240,255,.95)"/>
+                      <path d="M18 0 L22 14 L36 18 L22 22 L18 36 L14 22 L0 18 L14 14 Z" fill="rgba(200,240,255,.95)"/>
                     </g>
                     <g class="sparkle s3" transform="translate(182,150) scale(.62)">
-                      <path d="M18 0 L22 14 L36 18 L22 22 L18 36 L14 22 L0 18 L14 14 Z"
-                            fill="rgba(255,255,255,.85)"/>
+                      <path d="M18 0 L22 14 L36 18 L22 22 L18 36 L14 22 L0 18 L14 14 Z" fill="rgba(255,255,255,.85)"/>
                     </g>
                   </g>
                 </svg>
@@ -507,12 +285,11 @@
           <div class="face back coverFace"></div>
         </div>
 
-        <!-- PÁGINA 2 - apertura.mp4 -->
+        <!-- P2 -->
         <div class="page" data-index="1" style="z-index:7;">
           <div class="face front">
             <h2 class="title">Apertura</h2>
             <p class="subtitle">Video</p>
-
             <div class="panel">
               <div class="contentCard">
                 <video id="v_apertura" class="video" controls playsinline preload="auto">
@@ -528,12 +305,11 @@
           <div class="face back"></div>
         </div>
 
-        <!-- PÁGINA 3 - promesa.mp4 (autoplay al entrar) -->
+        <!-- P3 -->
         <div class="page" data-index="2" style="z-index:6;">
           <div class="face front">
             <h2 class="title">Promesa</h2>
             <p class="subtitle">Video</p>
-
             <div class="panel">
               <div class="contentCard">
                 <video id="v_promesa" class="video" controls playsinline preload="auto">
@@ -549,12 +325,11 @@
           <div class="face back"></div>
         </div>
 
-        <!-- PÁGINA 4 - estheryerick.mp4 -->
+        <!-- P4 -->
         <div class="page" data-index="3" style="z-index:5;">
           <div class="face front">
             <h2 class="title">Esther &amp; Erick</h2>
             <p class="subtitle">Video</p>
-
             <div class="panel">
               <div class="contentCard">
                 <video id="v_estheryerick" class="video" controls playsinline preload="auto">
@@ -570,12 +345,11 @@
           <div class="face back"></div>
         </div>
 
-        <!-- PÁGINA 5 - esposa.mp4 + música unmundodiferente al entrar -->
+        <!-- P5 -->
         <div class="page" data-index="4" style="z-index:4;">
           <div class="face front">
             <h2 class="title">Esposa</h2>
             <p class="subtitle">Video + canción</p>
-
             <div class="panel">
               <div class="contentCard">
                 <video id="v_esposa" class="video" controls playsinline preload="auto">
@@ -591,12 +365,11 @@
           <div class="face back"></div>
         </div>
 
-        <!-- PÁGINA 6 - padres.mp4 -->
+        <!-- P6 -->
         <div class="page" data-index="5" style="z-index:3;">
           <div class="face front">
             <h2 class="title">Padres</h2>
             <p class="subtitle">Video</p>
-
             <div class="panel">
               <div class="contentCard">
                 <video id="v_padres" class="video" controls playsinline preload="auto">
@@ -612,12 +385,11 @@
           <div class="face back"></div>
         </div>
 
-        <!-- PÁGINA 7 - boda.mp4 -->
+        <!-- P7 -->
         <div class="page" data-index="6" style="z-index:2;">
           <div class="face front">
             <h2 class="title">Boda</h2>
             <p class="subtitle">Video</p>
-
             <div class="panel">
               <div class="contentCard">
                 <video id="v_boda" class="video" controls playsinline preload="auto">
@@ -633,12 +405,11 @@
           <div class="face back"></div>
         </div>
 
-        <!-- PÁGINA 8 - ceremonia.mp4 -->
+        <!-- P8 -->
         <div class="page" data-index="7" style="z-index:1;">
           <div class="face front">
             <h2 class="title">Ceremonia</h2>
             <p class="subtitle">Video</p>
-
             <div class="panel">
               <div class="contentCard">
                 <video id="v_ceremonia" class="video" controls playsinline preload="auto">
@@ -646,7 +417,7 @@
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
-                  <button class="btn primary" data-nav="next" disabled>Fin</button>
+                  <button class="btn primary" disabled>Fin</button>
                 </div>
               </div>
             </div>
@@ -659,40 +430,30 @@
   </div>
 
   <script>
-    // ============================
-    // Helpers
-    // ============================
+    // Destello
     const flash = document.getElementById("flash");
     function flashAt(x,y){
       flash.style.setProperty("--x", x + "px");
       flash.style.setProperty("--y", y + "px");
       flash.classList.add("on");
-      setTimeout(() => flash.classList.remove("on"), 240);
+      setTimeout(()=>flash.classList.remove("on"), 240);
     }
 
-    // ============================
-    // Flipbook state
-    // ============================
+    // Flipbook
     const pages = Array.from(document.querySelectorAll(".page"));
     const maxIndex = pages.length - 1;
     let currentIndex = 0;
-
     const bgParticlesCanvas = document.getElementById("bgParticles");
 
     function renderBook(){
-      pages.forEach(p => {
+      pages.forEach(p=>{
         const idx = Number(p.dataset.index);
-        if (idx < currentIndex) p.classList.add("flipped");
-        else p.classList.remove("flipped");
+        p.classList.toggle("flipped", idx < currentIndex);
       });
-
-      // partículas fondo SOLO en portada
-      bgParticlesCanvas.style.opacity = (currentIndex === 0) ? "1" : "0";
+      bgParticlesCanvas.style.opacity = (currentIndex===0) ? "1" : "0";
     }
 
-    // ============================
-    // Audio / Video control
-    // ============================
+    // Audio/Video
     const aMarcha = document.getElementById("marcha_nupcial");
     const aMundo  = document.getElementById("unmundodiferente");
 
@@ -703,149 +464,90 @@
       4: document.getElementById("v_esposa"),
       5: document.getElementById("v_padres"),
       6: document.getElementById("v_boda"),
-      7: document.getElementById("v_ceremonia"),
+      7: document.getElementById("v_ceremonia")
     };
 
-    function pauseAllVideos(exceptId = null){
-      Object.values(videosByIndex).forEach(v => {
-        if (!v) return;
-        if (exceptId && v.id === exceptId) return;
-        try { v.pause(); } catch(_){}
-      });
-    }
-
-    function pauseAllAudio(except = null){
-      [aMarcha, aMundo].forEach(a => {
-        if (!a) return;
-        if (except && a === except) return;
-        try{ a.pause(); }catch(_){}
+    function pauseAllVideos(exceptId=null){
+      Object.values(videosByIndex).forEach(v=>{
+        if(!v) return;
+        if(exceptId && v.id===exceptId) return;
+        try{ v.pause(); }catch(_){}
       });
     }
 
     async function tryPlay(media){
-      if (!media) return false;
-      try{
-        await media.play();
-        return true;
-      }catch(_){
-        return false;
-      }
+      if(!media) return false;
+      try{ await media.play(); return true; }catch(_){ return false; }
     }
 
-    async function playVideoSafely(videoEl){
-      if (!videoEl) return;
-
-      // Asegura que solo “su” video esté activo
-      pauseAllVideos(videoEl.id);
-
-      // Recarga/actualiza buffers si venía atorado
-      try { videoEl.load(); } catch(_){}
-
-      // Espera a que pueda reproducir (o falle)
-      await new Promise((resolve) => {
-        if (videoEl.readyState >= 3) return resolve();
-        const ok = () => { cleanup(); resolve(); };
-        const err = () => { cleanup(); resolve(); };
-        const cleanup = () => {
-          videoEl.removeEventListener("canplay", ok);
-          videoEl.removeEventListener("loadeddata", ok);
-          videoEl.removeEventListener("error", err);
+    async function playVideoSafely(v){
+      if(!v) return;
+      pauseAllVideos(v.id);
+      try{ v.load(); }catch(_){}
+      await new Promise(res=>{
+        if(v.readyState>=3) return res();
+        const ok=()=>{cleanup();res();};
+        const err=()=>{cleanup();res();};
+        const cleanup=()=>{
+          v.removeEventListener("canplay",ok);
+          v.removeEventListener("loadeddata",ok);
+          v.removeEventListener("error",err);
         };
-        videoEl.addEventListener("canplay", ok, { once:true });
-        videoEl.addEventListener("loadeddata", ok, { once:true });
-        videoEl.addEventListener("error", err, { once:true });
+        v.addEventListener("canplay",ok,{once:true});
+        v.addEventListener("loadeddata",ok,{once:true});
+        v.addEventListener("error",err,{once:true});
       });
-
-      // Intenta autoplay (puede bloquearse; en ese caso queda listo para que le den play)
-      await tryPlay(videoEl);
+      await tryPlay(v);
     }
 
     function onEnterPage(idx){
-      // idx = 0..7
-      // Al entrar a cualquier página de video: pausar otros
-      const vid = videosByIndex[idx];
-      if (vid) pauseAllVideos(vid.id);
-      else pauseAllVideos(null);
-
-      // Página 3 (idx 2) autoplay promesa
-      if (idx === 2) {
-        playVideoSafely(videosByIndex[2]);
-      }
-
-      // Página 5 (idx 4): música unmundodiferente + autoplay esposa
-      if (idx === 4) {
-        pauseAllAudio(aMundo);
-        try { aMarcha.pause(); } catch(_){}
+      if(idx===2) playVideoSafely(videosByIndex[2]); // promesa
+      if(idx===4){
+        try{ aMarcha.pause(); }catch(_){}
         tryPlay(aMundo);
-        playVideoSafely(videosByIndex[4]);
+        playVideoSafely(videosByIndex[4]); // esposa
       }
     }
 
     function goTo(idx, e){
       const next = Math.max(0, Math.min(maxIndex, idx));
-      if (next === currentIndex) return;
-
-      if (e?.clientX != null) flashAt(e.clientX, e.clientY);
-      else flashAt(innerWidth * 0.5, innerHeight * 0.35);
-
+      if(next===currentIndex) return;
+      flashAt(e?.clientX ?? innerWidth*0.5, e?.clientY ?? innerHeight*0.35);
       currentIndex = next;
       renderBook();
       onEnterPage(currentIndex);
     }
 
-    // Navegación (portada solo anillo)
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", (e)=>{
       const navBtn = e.target.closest("[data-nav]");
-      if (!navBtn) return;
-
+      if(!navBtn) return;
       const dir = navBtn.getAttribute("data-nav");
-      if (dir === "prev") goTo(currentIndex - 1, e);
-      if (dir === "next") {
-        if (currentIndex === 0) return; // portada bloqueada
-        goTo(currentIndex + 1, e);
-      }
+      if(dir==="prev") goTo(currentIndex-1, e);
+      if(dir==="next"){ if(currentIndex!==0) goTo(currentIndex+1, e); }
     });
 
-    // Click anillo: inicia marcha y abre página 2
-    document.getElementById("btnRing").addEventListener("click", async (e) => {
-      // asegurar que mundo no suene al inicio
-      try { aMundo.pause(); aMundo.currentTime = 0; } catch(_){}
-
-      // gesto del usuario: aquí sí suele permitir audio
+    document.getElementById("btnRing").addEventListener("click", async (e)=>{
+      try{ aMundo.pause(); aMundo.currentTime=0; }catch(_){}
       await tryPlay(aMarcha);
-
       goTo(1, e);
     });
 
-    // Intento de autoplay en portada (puede fallar; se habilita con primer toque)
-    async function tryAutoplayMarcha(){
-      await tryPlay(aMarcha);
-    }
+    // intento autoplay marcha (puede bloquearse)
+    tryPlay(aMarcha);
+    document.addEventListener("pointerdown", async ()=>{ if(currentIndex===0 && aMarcha.paused) await tryPlay(aMarcha); }, {once:true});
 
-    // Primer toque en el documento: si marcha no pudo, lo intenta otra vez
-    document.addEventListener("pointerdown", async () => {
-      if (currentIndex === 0 && aMarcha?.paused) {
-        await tryPlay(aMarcha);
-      }
-    }, { once:true });
-
-    // Inicializa
     renderBook();
-    tryAutoplayMarcha();
 
-    // ============================
-    // Fondo partículas (portada)
-    // ============================
+    // Partículas portada
     const bg = bgParticlesCanvas.getContext("2d");
     function resizeBg(){
-      bgParticlesCanvas.width = Math.floor(innerWidth * devicePixelRatio);
-      bgParticlesCanvas.height = Math.floor(innerHeight * devicePixelRatio);
-      bgParticlesCanvas.style.width = innerWidth + "px";
-      bgParticlesCanvas.style.height = innerHeight + "px";
+      bgParticlesCanvas.width = Math.floor(innerWidth*devicePixelRatio);
+      bgParticlesCanvas.height = Math.floor(innerHeight*devicePixelRatio);
+      bgParticlesCanvas.style.width = innerWidth+"px";
+      bgParticlesCanvas.style.height = innerHeight+"px";
       bg.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
     }
-    addEventListener("resize", resizeBg);
-    resizeBg();
+    addEventListener("resize", resizeBg); resizeBg();
 
     const bgColors = [
       getComputedStyle(document.documentElement).getPropertyValue("--pBlue").trim(),
@@ -853,178 +555,96 @@
       getComputedStyle(document.documentElement).getPropertyValue("--pWhite").trim(),
       getComputedStyle(document.documentElement).getPropertyValue("--pSilver").trim()
     ];
-    const rand = (a,b)=>Math.random()*(b-a)+a;
+    const rand=(a,b)=>Math.random()*(b-a)+a;
 
-    const bgParticles = Array.from({length: 88}, () => ({
-      x: rand(0, innerWidth),
-      y: rand(0, innerHeight),
-      r: rand(1.2, 3.8),
-      vx: rand(-0.18, 0.18),
-      vy: rand(-0.38, -0.08),
-      a: rand(0.18, 0.8),
-      c: bgColors[(Math.random()*bgColors.length)|0],
-      t: rand(0, Math.PI*2),
-      sp: rand(0.006, 0.02)
+    const bgParticles = Array.from({length:88},()=>({
+      x:rand(0,innerWidth), y:rand(0,innerHeight),
+      r:rand(1.2,3.8), vx:rand(-0.18,0.18), vy:rand(-0.38,-0.08),
+      a:rand(0.18,0.8), c:bgColors[(Math.random()*bgColors.length)|0],
+      t:rand(0,Math.PI*2), sp:rand(0.006,0.02)
     }));
 
     function drawBgParticles(){
-      if (currentIndex !== 0) { requestAnimationFrame(drawBgParticles); return; }
-
+      if(currentIndex!==0){ requestAnimationFrame(drawBgParticles); return; }
       bg.clearRect(0,0,innerWidth,innerHeight);
-
-      for (const p of bgParticles){
+      for(const p of bgParticles){
         p.t += p.sp;
-        const glow = (Math.sin(p.t)+1)*0.5;
-        const alpha = Math.max(0.05, Math.min(0.95, p.a * (0.55 + glow*0.75)));
-
+        const glow=(Math.sin(p.t)+1)*0.5;
+        const alpha=Math.max(0.05,Math.min(0.95, p.a*(0.55+glow*0.75)));
         bg.beginPath();
-        bg.arc(p.x, p.y, p.r*(0.8 + glow*0.45), 0, Math.PI*2);
+        bg.arc(p.x,p.y,p.r*(0.8+glow*0.45),0,Math.PI*2);
         bg.fillStyle = p.c.replace(/[\d.]+\)$/g, alpha + ")");
         bg.fill();
-
-        if (glow > 0.84){
-          bg.strokeStyle = "rgba(255,255,255," + (alpha*0.55) + ")";
-          bg.lineWidth = 1;
-          bg.beginPath();
-          bg.moveTo(p.x - 6, p.y);
-          bg.lineTo(p.x + 6, p.y);
-          bg.moveTo(p.x, p.y - 6);
-          bg.lineTo(p.x, p.y + 6);
-          bg.stroke();
-        }
-
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.y < -12) { p.y = innerHeight + 12; p.x = rand(0, innerWidth); }
-        if (p.x < -12) p.x = innerWidth + 12;
-        if (p.x > innerWidth + 12) p.x = -12;
+        p.x += p.vx; p.y += p.vy;
+        if(p.y<-12){ p.y=innerHeight+12; p.x=rand(0,innerWidth); }
+        if(p.x<-12) p.x=innerWidth+12;
+        if(p.x>innerWidth+12) p.x=-12;
       }
-
       requestAnimationFrame(drawBgParticles);
     }
     drawBgParticles();
 
-    // ============================
-    // Cursor mágico + partículas que siguen el cursor (todas las páginas)
-    // ============================
+    // Cursor mágico + partículas
     const fxCanvas = document.getElementById("fxCanvas");
     const fx = fxCanvas.getContext("2d");
-
     function resizeFx(){
-      fxCanvas.width = Math.floor(innerWidth * devicePixelRatio);
-      fxCanvas.height = Math.floor(innerHeight * devicePixelRatio);
-      fxCanvas.style.width = innerWidth + "px";
-      fxCanvas.style.height = innerHeight + "px";
+      fxCanvas.width=Math.floor(innerWidth*devicePixelRatio);
+      fxCanvas.height=Math.floor(innerHeight*devicePixelRatio);
+      fxCanvas.style.width=innerWidth+"px";
+      fxCanvas.style.height=innerHeight+"px";
       fx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
     }
-    addEventListener("resize", resizeFx);
-    resizeFx();
+    addEventListener("resize", resizeFx); resizeFx();
 
-    const cursorEl = document.getElementById("cursor");
-    let lastSpawn = 0;
+    const cursorEl=document.getElementById("cursor");
+    let lastSpawn=0;
+    const fxPalette=["rgba(255,255,255,.86)","rgba(75,183,255,.86)","rgba(231,168,184,.82)","rgba(215,219,229,.88)"];
+    const fxParticles=[];
 
-    const fxPalette = [
-      "rgba(255,255,255,.86)",
-      "rgba(75,183,255,.86)",
-      "rgba(231,168,184,.82)",
-      "rgba(215,219,229,.88)"
-    ];
-
-    const fxParticles = [];
-
-    function spawnCursorParticles(x,y,boost=false){
-      const now = performance.now();
-      if (!boost && now - lastSpawn < 18) return;
-      lastSpawn = now;
-
-      const count = boost ? 14 : 6;
-      for (let i=0; i<count; i++){
-        fxParticles.push({
-          x, y,
-          vx: rand(-0.85, 0.85),
-          vy: rand(-1.55, -0.25),
-          life: rand(28, 52),
-          size: rand(1.2, 3.0),
-          c: fxPalette[(Math.random()*fxPalette.length)|0],
-          type: Math.random() < 0.30 ? "heart" : "spark"
-        });
+    function spawn(x,y,boost=false){
+      const now=performance.now();
+      if(!boost && now-lastSpawn<18) return;
+      lastSpawn=now;
+      const count=boost?14:6;
+      for(let i=0;i<count;i++){
+        fxParticles.push({x,y,vx:rand(-0.85,0.85),vy:rand(-1.55,-0.25),life:rand(28,52),size:rand(1.2,3.0),c:fxPalette[(Math.random()*fxPalette.length)|0],type:Math.random()<0.30?"heart":"spark"});
       }
     }
-
-    function drawHeart(x,y,s,color){
-      fx.save();
-      fx.translate(x,y);
-      fx.scale(s, s);
-      fx.fillStyle = color;
+    function heart(x,y,s,color){
+      fx.save(); fx.translate(x,y); fx.scale(s,s); fx.fillStyle=color;
       fx.beginPath();
-      fx.moveTo(0, 2);
-      fx.bezierCurveTo(-3, -2, -8, -1, -8, 4);
-      fx.bezierCurveTo(-8, 9, -2, 12, 0, 15);
-      fx.bezierCurveTo(2, 12, 8, 9, 8, 4);
-      fx.bezierCurveTo(8, -1, 3, -2, 0, 2);
+      fx.moveTo(0,2);
+      fx.bezierCurveTo(-3,-2,-8,-1,-8,4);
+      fx.bezierCurveTo(-8,9,-2,12,0,15);
+      fx.bezierCurveTo(2,12,8,9,8,4);
+      fx.bezierCurveTo(8,-1,3,-2,0,2);
       fx.fill();
       fx.restore();
     }
-
-    function tickFx(){
+    function tick(){
       fx.clearRect(0,0,innerWidth,innerHeight);
-
-      for (let i=fxParticles.length-1; i>=0; i--){
-        const p = fxParticles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.03;
-        p.life -= 1;
-
-        const alpha = Math.max(0, Math.min(1, p.life / 44));
-        fx.globalAlpha = alpha;
-
-        if (p.type === "heart"){
-          drawHeart(p.x, p.y, p.size*0.35, p.c);
-        }else{
-          fx.fillStyle = p.c;
-          fx.beginPath();
-          fx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-          fx.fill();
-
-          // destellito cruz ocasional
-          if (alpha > 0.6 && Math.random() < 0.05){
-            fx.strokeStyle = "rgba(255,255,255," + (alpha*0.65) + ")";
-            fx.lineWidth = 1;
-            fx.beginPath();
-            fx.moveTo(p.x - 4, p.y);
-            fx.lineTo(p.x + 4, p.y);
-            fx.moveTo(p.x, p.y - 4);
-            fx.lineTo(p.x, p.y + 4);
-            fx.stroke();
-          }
-        }
-
-        if (p.life <= 0) fxParticles.splice(i,1);
+      for(let i=fxParticles.length-1;i>=0;i--){
+        const p=fxParticles[i];
+        p.x+=p.vx; p.y+=p.vy; p.vy+=0.03; p.life-=1;
+        const a=Math.max(0,Math.min(1,p.life/44));
+        fx.globalAlpha=a;
+        if(p.type==="heart") heart(p.x,p.y,p.size*0.35,p.c);
+        else{ fx.fillStyle=p.c; fx.beginPath(); fx.arc(p.x,p.y,p.size,0,Math.PI*2); fx.fill(); }
+        if(p.life<=0) fxParticles.splice(i,1);
       }
-
-      requestAnimationFrame(tickFx);
+      requestAnimationFrame(tick);
     }
-    tickFx();
+    tick();
 
-    addEventListener("pointermove", (e) => {
-      cursorEl.style.left = e.clientX + "px";
-      cursorEl.style.top  = e.clientY + "px";
-      spawnCursorParticles(e.clientX, e.clientY, false);
-    }, {passive:true});
+    addEventListener("pointermove",(e)=>{
+      cursorEl.style.left=e.clientX+"px";
+      cursorEl.style.top=e.clientY+"px";
+      spawn(e.clientX,e.clientY,false);
+    },{passive:true});
 
-    addEventListener("pointerdown", (e) => {
-      flashAt(e.clientX, e.clientY);
-      spawnCursorParticles(e.clientX, e.clientY, true);
-    });
-
-    document.addEventListener("pointerover", (e) => {
-      const el = e.target.closest("button, a, video");
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      flashAt(r.left + r.width*0.5, r.top + r.height*0.35);
-      spawnCursorParticles(r.left + r.width*0.5, r.top + r.height*0.5, true);
+    addEventListener("pointerdown",(e)=>{
+      flashAt(e.clientX,e.clientY);
+      spawn(e.clientX,e.clientY,true);
     });
   </script>
 </body>
