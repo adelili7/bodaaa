@@ -1,34 +1,10 @@
 <!--
 ============================================================
-INVITACIÓN FLIPBOOK (UN SOLO index.html)
-✅ Flip book bidireccional (prev/next) — EXCEPTO portada: solo abre con el anillo
-✅ Página girando (3D) + destellos al pasar de sección
-✅ Partículas flotantes en portada (azul, rose gold, blanco, plateado)
-✅ Cursor mágico (visible en TODAS las páginas) + rastro de corazones/partículas
-✅ Partículas que siguen el cursor incluso dentro del flipbook
-✅ Reglas de audio/video:
-  - Página 1 (PORTADA): fondo rose gold + anillo mágico
-    * Al cargar: intenta iniciar marcha_nupcial.mp3 (si el navegador bloquea autoplay, se inicia en el primer click)
-    * Al click en el anillo: inicia/reanuda marcha_nupcial.mp3 y abre Página 2 (apertura.mp4)
-  - Página 2: apertura.mp4
-  - Página 3: promesa.mp4 (al entrar a página 3, reproduce automáticamente)
-  - Página 4: estheryerick.mp4
-  - Página 5: esposa.mp4 (al entrar a página 5, reproduce automáticamente esposa.mp4
-            + suena automáticamente unmundodiferente.mp3)
-  - Página 6: padres.mp4
-  - Página 7: boda.mp4
-  - Página 8: ceremonia.mp4
-
-📁 Archivos esperados en /assets:
-  marcha_nupcial.mp3
-  unmundodiferente.mp3
-  apertura.mp4
-  promesa.mp4
-  estheryerick.mp4
-  esposa.mp4
-  padres.mp4
-  boda.mp4
-  ceremonia.mp4
+INVITACIÓN FLIPBOOK (UN SOLO index.html) — RUTAS CORREGIDAS
+✅ IMPORTANTÍSIMO: como NO moviste nada, tus mp4/mp3 están en la RAÍZ del repo,
+   así que cambié TODO de  assets/archivo  →  ./archivo
+✅ Pega esto en un archivo llamado: index.html (en la raíz del repo)
+✅ (Recomendado) crea un archivo vacío .nojekyll
 ============================================================
 -->
 <!doctype html>
@@ -48,24 +24,20 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       --line: rgba(255,255,255,.12);
       --card: rgba(255,255,255,.06);
 
-      /* Rose gold background page 1 */
       --roseA:#2a141f;
       --roseB:#4a2332;
       --roseGlow: rgba(231,168,184,.25);
 
-      /* plata */
       --silver1:#f7fbff;
       --silver2:#cfd6e2;
       --silver3:#7e8796;
       --silver4:#eef2f7;
 
-      /* gema azul */
       --blue1:#bfe6ff;
       --blue2:#4bb7ff;
       --blue3:#1677ff;
       --blue4:#0a2a8a;
 
-      /* partículas */
       --pBlue:  rgba(75,183,255,.80);
       --pRose:  rgba(231,168,184,.78);
       --pWhite: rgba(255,255,255,.85);
@@ -83,10 +55,9 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
         radial-gradient(850px 520px at 80% 25%, rgba(231,168,184,.12), transparent 60%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       overflow:hidden;
-      cursor:none; /* cursor mágico */
+      cursor:none;
     }
 
-    /* Partículas portada (fondo) */
     #bgParticles{
       position:fixed;
       inset:0;
@@ -96,7 +67,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       transition: opacity 450ms ease;
     }
 
-    /* Partículas del cursor (siempre) */
     #fxCanvas{
       position:fixed;
       inset:0;
@@ -104,7 +74,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       pointer-events:none;
     }
 
-    /* Destello transición */
     #flash{
       position: fixed;
       inset: 0;
@@ -119,7 +88,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     }
     #flash.on{ opacity: 1; }
 
-    /* Cursor mágico */
     .cursor{
       position: fixed;
       z-index: 100;
@@ -146,7 +114,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       opacity:.75;
     }
 
-    /* Stage */
     .stage{
       position:relative;
       z-index: 2;
@@ -157,7 +124,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       padding: 22px;
     }
 
-    /* Flipbook */
     .bookWrap{
       width: min(1020px, 96vw);
       height: min(680px, 82vh);
@@ -186,7 +152,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       box-shadow: 0 22px 60px rgba(0,0,0,.45);
     }
 
-    /* Lomo */
     .page::before{
       content:"";
       position:absolute;
@@ -199,9 +164,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       transform: translateZ(1px);
     }
 
-    .page.flipped{
-      transform: rotateY(-180deg);
-    }
+    .page.flipped{ transform: rotateY(-180deg); }
 
     .face{
       position:absolute;
@@ -216,7 +179,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     .front{ transform: rotateY(0deg) translateZ(1px); }
     .back{ transform: rotateY(180deg) translateZ(1px); }
 
-    /* Página 1 (portada) fondo rose gold */
     .coverFace{
       background:
         radial-gradient(700px 420px at 50% 25%, var(--roseGlow), transparent 60%),
@@ -297,10 +259,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     .btn:active{ transform: translateY(1px); }
     .btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
-    /* EXCEPCIÓN: NO botones en portada */
-    .noNav{ display:none; }
-
-    /* Videos */
     .video{
       width: 100%;
       border-radius: 18px;
@@ -308,7 +266,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       background:#000;
     }
 
-    /* Anillo mágico botón */
     .ringBtn{
       appearance:none;
       border:0;
@@ -340,7 +297,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     }
     .ringBtn:active .ringSvg{ transform: translateY(1px) scale(.99); }
 
-    /* Animaciones princesa */
     .sparkle { animation: twinkle 1.8s ease-in-out infinite; transform-origin: center; }
     .sparkle.s2{ animation-delay: .25s; opacity:.75; }
     .sparkle.s3{ animation-delay: .55s; opacity:.6; }
@@ -366,7 +322,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       50%{ transform: translateY(-6px); }
     }
 
-    /* Hover sparkles sobre botones */
     .btn:hover{
       box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 0 18px rgba(231,168,184,.12);
     }
@@ -388,36 +343,24 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
 </head>
 
 <body>
-  <!-- Fondo partículas (solo portada) -->
   <canvas id="bgParticles"></canvas>
-
-  <!-- Destello -->
   <div id="flash" aria-hidden="true"></div>
-
-  <!-- Canvas partículas del cursor (SIEMPRE) -->
   <canvas id="fxCanvas"></canvas>
 
-  <!-- Cursor mágico -->
   <div class="cursor" id="cursor" aria-hidden="true">
     <div class="ring"></div>
     <div class="dot"></div>
   </div>
 
-  <!-- Audios -->
-  <audio id="marcha_nupcial" src="assets/marcha_nupcial.mp3" preload="auto"></audio>
-  <audio id="unmundodiferente" src="assets/unmundodiferente.mp3" preload="auto"></audio>
+  <!-- ✅ RUTAS CORREGIDAS (RAÍZ) -->
+  <audio id="marcha_nupcial" src="./marcha_nupcial.mp3" preload="auto"></audio>
+  <audio id="unmundodiferente" src="./unmundodiferente.mp3" preload="auto"></audio>
 
   <div class="stage">
     <div class="bookWrap">
       <div class="book" id="book">
 
-        <!-- =======================
-             PÁGINA 1 (PORTADA)
-             - Fondo rose gold
-             - Anillo mágico botón
-             - Autoplay intento marcha_nupcial
-             - Abre solo con anillo
-        ======================== -->
+        <!-- PÁGINA 1 (PORTADA) -->
         <div class="page" data-index="0" style="z-index: 8;">
           <div class="face front coverFace">
             <h1 class="yes">¡Sí, acepto!</h1>
@@ -427,7 +370,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
               <button id="btnRing" class="ringBtn" type="button" aria-label="Abrir invitación">
                 <svg class="ringSvg float" viewBox="0 0 260 260" role="img" aria-hidden="true">
                   <defs>
-                    <!-- Plata -->
                     <linearGradient id="silverGrad" x1="0" y1="0" x2="1" y2="1">
                       <stop offset="0%"  stop-color="var(--silver1)"/>
                       <stop offset="22%" stop-color="var(--silver2)"/>
@@ -435,27 +377,21 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
                       <stop offset="72%" stop-color="var(--silver4)"/>
                       <stop offset="100%" stop-color="var(--silver2)"/>
                     </linearGradient>
-
-                    <!-- Brillo plata -->
                     <linearGradient id="silverSpec" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
                       <stop offset="45%" stop-color="rgba(255,255,255,.95)"/>
                       <stop offset="55%" stop-color="rgba(255,255,255,.15)"/>
                       <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
                     </linearGradient>
-
-                    <!-- Gema azul -->
                     <radialGradient id="blueGem" cx="35%" cy="30%" r="75%">
                       <stop offset="0%"  stop-color="var(--blue1)"/>
                       <stop offset="35%" stop-color="var(--blue2)"/>
                       <stop offset="70%" stop-color="var(--blue3)"/>
                       <stop offset="100%" stop-color="var(--blue4)"/>
                     </radialGradient>
-
                     <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
                       <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,.45)"/>
                     </filter>
-
                     <filter id="sparkleGlow" x="-80%" y="-80%" width="260%" height="260%">
                       <feGaussianBlur stdDeviation="1.8" result="bb"/>
                       <feMerge>
@@ -541,9 +477,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           <div class="face back coverFace"></div>
         </div>
 
-        <!-- =======================
-             PÁGINA 2 - apertura.mp4
-        ======================== -->
+        <!-- PÁGINA 2 - apertura.mp4 -->
         <div class="page" data-index="1" style="z-index: 7;">
           <div class="face front">
             <h2 class="title">Apertura</h2>
@@ -552,7 +486,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
             <div class="panel">
               <div class="contentCard">
                 <video id="v_apertura" class="video" controls playsinline preload="metadata">
-                  <source src="assets/apertura.mp4" type="video/mp4" />
+                  <source src="./apertura.mp4" type="video/mp4" />
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
@@ -564,9 +498,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           <div class="face back"></div>
         </div>
 
-        <!-- =======================
-             PÁGINA 3 - promesa.mp4 (autoplay al entrar)
-        ======================== -->
+        <!-- PÁGINA 3 - promesa.mp4 -->
         <div class="page" data-index="2" style="z-index: 6;">
           <div class="face front">
             <h2 class="title">Promesa</h2>
@@ -575,7 +507,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
             <div class="panel">
               <div class="contentCard">
                 <video id="v_promesa" class="video" controls playsinline preload="metadata">
-                  <source src="assets/promesa.mp4" type="video/mp4" />
+                  <source src="./promesa.mp4" type="video/mp4" />
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
@@ -587,9 +519,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           <div class="face back"></div>
         </div>
 
-        <!-- =======================
-             PÁGINA 4 - estheryerick.mp4
-        ======================== -->
+        <!-- PÁGINA 4 - estheryerick.mp4 -->
         <div class="page" data-index="3" style="z-index: 5;">
           <div class="face front">
             <h2 class="title">Esther &amp; Erick</h2>
@@ -598,7 +528,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
             <div class="panel">
               <div class="contentCard">
                 <video id="v_estheryerick" class="video" controls playsinline preload="metadata">
-                  <source src="assets/estheryerick.mp4" type="video/mp4" />
+                  <source src="./estheryerick.mp4" type="video/mp4" />
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
@@ -610,9 +540,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           <div class="face back"></div>
         </div>
 
-        <!-- =======================
-             PÁGINA 5 - esposa.mp4 + al entrar: unmundodiferente.mp3 y autoplay esposa.mp4
-        ======================== -->
+        <!-- PÁGINA 5 - esposa.mp4 -->
         <div class="page" data-index="4" style="z-index: 4;">
           <div class="face front">
             <h2 class="title">Esposa</h2>
@@ -621,7 +549,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
             <div class="panel">
               <div class="contentCard">
                 <video id="v_esposa" class="video" controls playsinline preload="metadata">
-                  <source src="assets/esposa.mp4" type="video/mp4" />
+                  <source src="./esposa.mp4" type="video/mp4" />
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
@@ -633,9 +561,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           <div class="face back"></div>
         </div>
 
-        <!-- =======================
-             PÁGINA 6 - padres.mp4
-        ======================== -->
+        <!-- PÁGINA 6 - padres.mp4 -->
         <div class="page" data-index="5" style="z-index: 3;">
           <div class="face front">
             <h2 class="title">Padres</h2>
@@ -644,7 +570,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
             <div class="panel">
               <div class="contentCard">
                 <video id="v_padres" class="video" controls playsinline preload="metadata">
-                  <source src="assets/padres.mp4" type="video/mp4" />
+                  <source src="./padres.mp4" type="video/mp4" />
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
@@ -656,9 +582,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           <div class="face back"></div>
         </div>
 
-        <!-- =======================
-             PÁGINA 7 - boda.mp4
-        ======================== -->
+        <!-- PÁGINA 7 - boda.mp4 -->
         <div class="page" data-index="6" style="z-index: 2;">
           <div class="face front">
             <h2 class="title">Boda</h2>
@@ -667,7 +591,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
             <div class="panel">
               <div class="contentCard">
                 <video id="v_boda" class="video" controls playsinline preload="metadata">
-                  <source src="assets/boda.mp4" type="video/mp4" />
+                  <source src="./boda.mp4" type="video/mp4" />
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
@@ -679,9 +603,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           <div class="face back"></div>
         </div>
 
-        <!-- =======================
-             PÁGINA 8 - ceremonia.mp4
-        ======================== -->
+        <!-- PÁGINA 8 - ceremonia.mp4 -->
         <div class="page" data-index="7" style="z-index: 1;">
           <div class="face front">
             <h2 class="title">Ceremonia</h2>
@@ -690,7 +612,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
             <div class="panel">
               <div class="contentCard">
                 <video id="v_ceremonia" class="video" controls playsinline preload="metadata">
-                  <source src="assets/ceremonia.mp4" type="video/mp4" />
+                  <source src="./ceremonia.mp4" type="video/mp4" />
                 </video>
                 <div class="nav">
                   <button class="btn" data-nav="prev">⟵ Anterior</button>
@@ -707,12 +629,9 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
   </div>
 
   <script>
-    // ============================
-    // Flipbook state
-    // ============================
     const pages = Array.from(document.querySelectorAll(".page"));
     const maxIndex = pages.length - 1;
-    let currentIndex = 0; // 0 = portada
+    let currentIndex = 0;
 
     const flash = document.getElementById("flash");
     const bgParticlesCanvas = document.getElementById("bgParticles");
@@ -730,8 +649,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
         if (idx < currentIndex) p.classList.add("flipped");
         else p.classList.remove("flipped");
       });
-
-      // Partículas de fondo SOLO en portada
       bgParticlesCanvas.style.opacity = (currentIndex === 0) ? "1" : "0";
     }
 
@@ -739,21 +656,16 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       const next = Math.max(0, Math.min(maxIndex, idx));
       if (next === currentIndex) return;
 
-      // destello
       if (e?.clientX != null) flashAt(e.clientX, e.clientY);
       else flashAt(window.innerWidth*0.5, window.innerHeight*0.35);
 
-      // detener videos no visibles (para evitar audio múltiple)
       stopAllVideos();
 
       currentIndex = next;
       renderBook();
-
-      // Disparadores por página (autoplay)
       onEnterPage(currentIndex);
     }
 
-    // Navegación (excepto portada -> solo anillo para avanzar)
     document.addEventListener("click", (e) => {
       const navBtn = e.target.closest("[data-nav]");
       if (!navBtn) return;
@@ -761,15 +673,11 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       const dir = navBtn.getAttribute("data-nav");
       if (dir === "prev") goTo(currentIndex - 1, e);
       if (dir === "next") {
-        // Bloquear avanzar desde portada por botón (no existe) pero por seguridad:
         if (currentIndex === 0) return;
         goTo(currentIndex + 1, e);
       }
     });
 
-    // ============================
-    // Audio / Video rules
-    // ============================
     const aMarcha = document.getElementById("marcha_nupcial");
     const aMundo  = document.getElementById("unmundodiferente");
 
@@ -786,75 +694,40 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     function stopAllVideos(){
       Object.values(videos).forEach(v => {
         if (!v) return;
-        try{
-          v.pause();
-          v.currentTime = 0;
-        }catch(_){}
-      });
-    }
-
-    function stopAllAudio(){
-      [aMarcha, aMundo].forEach(a => {
-        try{
-          a.pause();
-          a.currentTime = 0;
-        }catch(_){}
+        try{ v.pause(); v.currentTime = 0; }catch(_){}
       });
     }
 
     async function tryPlay(media){
       if (!media) return;
-      try{ await media.play(); }catch(err){ /* autoplay puede bloquearse */ }
+      try{ await media.play(); }catch(_){}
     }
 
     function onEnterPage(pageIndex){
-      // pageIndex: 0..7  (0 portada, 1..7 páginas de video)
-      // Entrar a página 3 (index 2) => autoplay promesa.mp4
       if (pageIndex === 2){
         tryPlay(videos[2]); // promesa
       }
-
-      // Entrar a página 5 (index 4) => sonar unmundodiferente + autoplay esposa.mp4
       if (pageIndex === 4){
-        // Cambia canción
-        try{
-          aMarcha.pause();
-        }catch(_){}
-        // reproducir unmundodiferente
-        tryPlay(aMundo);
-        // reproducir esposa.mp4
-        tryPlay(videos[4]);
+        try{ aMarcha.pause(); }catch(_){}
+        tryPlay(aMundo);      // música
+        tryPlay(videos[4]);   // esposa
       }
     }
 
-    // Portada: intento de autoplay marcha_nupcial (puede bloquearse)
     async function tryAutoplayMarcha(){
-      // En móviles iOS/Chrome suele bloquear hasta interacción.
-      // Aun así lo intentamos: si falla, se disparará cuando toquen el anillo.
-      try{
-        await aMarcha.play();
-      }catch(_){}
+      try{ await aMarcha.play(); }catch(_){}
     }
 
-    // Click en anillo: iniciar/reanudar marcha + abrir página 2 (index 1)
     document.getElementById("btnRing").addEventListener("click", async (e) => {
-      // Asegura que unmundodiferente no esté sonando al inicio
       try{ aMundo.pause(); aMundo.currentTime = 0; }catch(_){}
-
-      // Inicia marcha nupcial por gesto del usuario (esto sí debe funcionar)
       await tryPlay(aMarcha);
-
-      // Abrir página 2 (apertura)
       goTo(1, e);
     });
 
-    // Primera carga
     renderBook();
     tryAutoplayMarcha();
 
-    // ============================
-    // Fondo partículas portada (bgParticles)
-    // ============================
+    // Partículas portada
     const bg = bgParticlesCanvas.getContext("2d");
     function resizeBg(){
       bgParticlesCanvas.width = Math.floor(innerWidth * devicePixelRatio);
@@ -887,12 +760,7 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     }));
 
     function drawBgParticles(){
-      // Solo dibujar si estamos en portada
-      if (currentIndex !== 0){
-        requestAnimationFrame(drawBgParticles);
-        return;
-      }
-
+      if (currentIndex !== 0){ requestAnimationFrame(drawBgParticles); return; }
       bg.clearRect(0,0,innerWidth,innerHeight);
 
       for (const p of bgParticles){
@@ -927,12 +795,9 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     }
     drawBgParticles();
 
-    // ============================
-    // Cursor mágico + partículas que siguen el cursor (fxCanvas)
-    // ============================
+    // Cursor mágico + partículas siguiendo cursor
     const fxCanvas = document.getElementById("fxCanvas");
     const fx = fxCanvas.getContext("2d");
-
     function resizeFx(){
       fxCanvas.width = Math.floor(innerWidth * devicePixelRatio);
       fxCanvas.height = Math.floor(innerHeight * devicePixelRatio);
@@ -944,7 +809,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     resizeFx();
 
     const cursorEl = document.getElementById("cursor");
-    let mx = innerWidth/2, my = innerHeight/2;
     let lastSpawn = 0;
 
     const fxPalette = [
@@ -953,8 +817,8 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       "rgba(231,168,184,.80)",
       "rgba(215,219,229,.85)"
     ];
-
     const fxParticles = [];
+
     function spawnCursorParticles(x,y,boost=false){
       const now = performance.now();
       if (!boost && now - lastSpawn < 18) return;
@@ -978,10 +842,8 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       fx.save();
       fx.translate(x,y);
       fx.scale(s, s);
-      fx.globalAlpha = 1;
       fx.fillStyle = color;
       fx.beginPath();
-      // corazón simple con curvas
       fx.moveTo(0, 2);
       fx.bezierCurveTo(-3, -2, -8, -1, -8, 4);
       fx.bezierCurveTo(-8, 9, -2, 12, 0, 15);
@@ -1011,18 +873,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
           fx.beginPath();
           fx.arc(p.x, p.y, p.size, 0, Math.PI*2);
           fx.fill();
-
-          // mini destello cruz
-          if (alpha > 0.6 && Math.random() < 0.06){
-            fx.strokeStyle = "rgba(255,255,255," + (alpha*0.65) + ")";
-            fx.lineWidth = 1;
-            fx.beginPath();
-            fx.moveTo(p.x - 4, p.y);
-            fx.lineTo(p.x + 4, p.y);
-            fx.moveTo(p.x, p.y - 4);
-            fx.lineTo(p.x, p.y + 4);
-            fx.stroke();
-          }
         }
 
         if (p.life <= 0) fxParticles.splice(i,1);
@@ -1032,23 +882,17 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
     }
     tickFx();
 
-    // Cursor move
     addEventListener("pointermove", (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      cursorEl.style.left = mx + "px";
-      cursorEl.style.top = my + "px";
-
-      spawnCursorParticles(mx, my, false);
+      cursorEl.style.left = e.clientX + "px";
+      cursorEl.style.top  = e.clientY + "px";
+      spawnCursorParticles(e.clientX, e.clientY, false);
     }, {passive:true});
 
-    // Interacciones: destellos/partículas extra al click y hover
     addEventListener("pointerdown", (e) => {
       flashAt(e.clientX, e.clientY);
       spawnCursorParticles(e.clientX, e.clientY, true);
     });
 
-    // Hover extra sobre elementos interactivos
     document.addEventListener("pointerover", (e) => {
       const el = e.target.closest("button, a, video");
       if (!el) return;
@@ -1057,7 +901,6 @@ INVITACIÓN FLIPBOOK (UN SOLO index.html)
       spawnCursorParticles(r.left + r.width*0.5, r.top + r.height*0.5, true);
     });
 
-    // Primer gesto del usuario: si marcha no logró autoplay, aquí se habilita
     document.addEventListener("pointerdown", async () => {
       if (currentIndex === 0 && aMarcha.paused){
         try{ await aMarcha.play(); }catch(_){}
